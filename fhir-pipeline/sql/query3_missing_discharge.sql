@@ -1,0 +1,1 @@
+-- Q3: Percentage of encounters missing a discharge date grouped by status

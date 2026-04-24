@@ -1,0 +1,1 @@
+-- Q4: Each patient's single most abnormal observation

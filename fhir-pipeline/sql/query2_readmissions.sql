@@ -1,0 +1,1 @@
+-- Q2: Patients readmitted within 30 days of a previous discharge
