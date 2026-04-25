@@ -23,3 +23,6 @@ The transform layer sits between fetch and the database. It takes a list of raw 
 
 # Load
 The load layer loads the cleaned dataframes into a local sqlite database vis SQLAlchemy. The load method uses upsert strategy where we can insert new records and also update new records which avoids duplication. 
+
+# Pipeline method
+The pipeline method combines fetch method to pull patients records from FHIR API, clean and flatten raw json data into structured dataframes using transform method. The load method is used to upsert each dataframe into sqlite and log a summary of inserted and updated counts
