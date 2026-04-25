@@ -43,15 +43,46 @@ CREATE TABLE IF NOT EXISTS encounters (
 
 
 def get_engine():
-    pass
+   
+    engine=create_engine(DB_URL)
+
+    return engine
 
 
 def init_schema(engine) -> None:
-    pass
+
+    with engine.begin() as conn:
+        conn.execute(text(SCHEMA))
+    logging.info("Schema initialized")
+
 
 
 def _upsert_dataframe(df: pd.DataFrame, table: str, pk: str, engine) -> tuple[int, int]:
-    pass
+
+    try:
+        existing=pd.read_sql(f"SLEECT {pk} FROM {table}",engine)
+        existing_ids=set(existing[pk].tolist())
+    except:
+        existing_ids=set()
+    
+    mask=df[pk].isin(existing_ids)
+    new_rows=df[~mask]
+    update_rows=df[mask]
+
+    if not new_rows.empty:
+        new_rows.to_sql(table,engine,if_exists="replace",index=False)
+    
+    if not update_rows.empty:
+        update_rows.to_sql("_temp",engine,if_exists="replace",index=False)
+        with engine.begin() as conn:
+            cols=", ".join(df.columns)
+            conn.execute(text(f"INSERT OR REPLACE INTO {table} ({cols}) SELECT {cols} FROM _temp"))
+    
+    inserted=len(new_rows)
+    updated=len(update_rows)
+    logging.info(f"{table}:{inserted} inserted,{updated} updated")
+    return (inserted,updated)
+
 
 
 def load_all(
@@ -59,4 +90,14 @@ def load_all(
     observations: pd.DataFrame,
     encounters: pd.DataFrame,
 ) -> dict:
-    pass
+    engine=get_engine()
+    init_schema(engine)
+    p=_upsert_dataframe(patients,"patients","patients_id",engine)
+    o=_upsert_dataframe(observations,"observations","observation_id",engine)
+    e=_upsert_dataframe(encounters,"encounters","encounter_id",engine)
+
+    return {
+        "patients":{"inserted":p[0],"updated":p[1]},
+        "observations":{"inserted":o[0],"updated":o[1]},
+        "encounters":{"inserted":e[0],"updated":e[1]},
+    }

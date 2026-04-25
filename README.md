@@ -19,5 +19,7 @@ detecting out-of-range lab values, flagging readmission risks, and
 identifying documentation gaps like missing discharge dates.
 
 # Transform
-The transform layer sits between fetch and the database. It takes a list of raw FHIR resources and returns a a pandas dataframe with columns defined in the SQL schema. FHIR data is deeply nested 
-and frequently has missing fields which are handled by three transform functions handle this defensively using ".get()" defaults throughout.
+The transform layer sits between fetch and the database. It takes a list of raw FHIR resources and returns a a pandas dataframe with columns defined in the SQL schema. Real FHIR data is deeply nested and frequently has missing fields such as three transform functions extract values defensively using chained  '.get()' defaults, ensuring missing addresses, reference ranges, or  patient references never crash the pipeline.
+
+# Load
+The load layer loads the cleaned dataframes into a local sqlite database vis SQLAlchemy. The load method uses upsert strategy where we can insert new records and also update new records which avoids duplication. 
