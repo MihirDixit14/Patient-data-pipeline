@@ -26,3 +26,6 @@ The load layer loads the cleaned dataframes into a local sqlite database vis SQL
 
 # Pipeline method
 The pipeline method combines fetch method to pull patients records from FHIR API, clean and flatten raw json data into structured dataframes using transform method. The load method is used to upsert each dataframe into sqlite and log a summary of inserted and updated counts
+
+# Transform test
+This is a testing method used to test transform function using pytest.

@@ -19,13 +19,7 @@ logging.basicConfig(
 
 
 def run(force_refresh: bool = False) -> None:
-    # TODO 1: log that pipeline is starting
-    # TODO 2: record start time using time.time()
-    # TODO 3: call fetch_all(force_refresh) to get raw data
-    # TODO 4: call transform_patients, transform_observations, transform_encounters
-    # TODO 5: call load_all with the three DataFrames
-    # TODO 6: log the summary dict returned by load_all
-    # TODO 7: log total elapsed time using time.time() - start
+
     logging.info("Pipeline starting")
     start=time.time()
     raw=fetch_all(force_refresh)
