@@ -29,3 +29,6 @@ The pipeline method combines fetch method to pull patients records from FHIR API
 
 # Transform test
 This is a testing method used to test transform function using pytest.
+
+# SQL Queries
+The sql folder contains four analytical queries that surface clinical insights directly from the loaded data. Each query targets a specific data quality or clinical pattern — range violations, readmissions, missing discharges, and the most abnormal observation per patient.
